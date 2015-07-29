@@ -114,6 +114,7 @@ func (p *Pcap) NextEx() (pkt *Packet, result int32) {
 	pkt.Caplen = uint32(pkthdr.caplen)
 	pkt.Len = uint32(pkthdr.len)
 	pkt.Data = C.GoBytes(buf, C.int(pkthdr.caplen))
+	pkt.pcapDataLink = p.Datalink()
 	return
 }
 

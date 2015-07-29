@@ -71,16 +71,32 @@ func decodemac(pkt []byte) uint64 {
 
 // Decode decodes the headers of a Packet.
 func (p *Packet) Decode() {
-	if len(p.Data) <= 14 {
-		return
-	}
+	switch p.pcapDataLink {
+	case 113:
+		if len(p.Data) <= 16 {
+			return
+		}
 
-	p.Type = int(binary.BigEndian.Uint16(p.Data[12:14]))
-	p.DestMac = decodemac(p.Data[0:6])
-	p.SrcMac = decodemac(p.Data[6:12])
+		p.Type = int(binary.BigEndian.Uint16(p.Data[14:16]))
+		p.SrcMac = decodemac(p.Data[6:12])
 
-	if len(p.Data) >= 15 {
-		p.Payload = p.Data[14:]
+		if len(p.Data) >= 17 {
+			p.Payload = p.Data[16:]
+		}
+
+	default:
+		if len(p.Data) <= 14 {
+			return
+		}
+
+		p.Type = int(binary.BigEndian.Uint16(p.Data[12:14]))
+		p.DestMac = decodemac(p.Data[0:6])
+		p.SrcMac = decodemac(p.Data[6:12])
+
+		if len(p.Data) >= 15 {
+			p.Payload = p.Data[14:]
+		}
+
 	}
 
 	switch p.Type {

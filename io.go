@@ -49,6 +49,8 @@ type Packet struct {
 	IP  *Iphdr  // IP header (for IP packets, after decoding)
 	TCP *Tcphdr // TCP header (for TCP packets, after decoding)
 	UDP *Udphdr // UDP header (for UDP packets after decoding)
+
+	pcapDataLink int
 }
 
 // Reader parses pcap files.
